@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  border: 0;
+  outline: 0;
+  list-style: none;
+  text-decoration: none;
+}
+
+:root {
+  --color-bg: #181a1b;
+  --color-primary: #16688e;
+  --color-black: #000;
+  --color-white: #e8e6e3;
+  
+  --transition: all 400ms ease;
+
+  --container-width-lg: 75%;
+  --container-width-md: 86%;
+  --container-width-sm: 90%;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  background: var(--color-bg);
+  font-family: 'Poppins', sans-serif;
+  color: var(--color-white);
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  width: var(--container-width-lg);
+  margin: 0 auto;
+  padding: 2em;
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  gap: 2em;
+}
+
+.card {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  font-size: 1.1em;
+}
+
+.pagination {
+  display: flex;
+  gap: 1.5em;
+}
+
+select {
+  font-size: 1.4em;
+  padding: 0.3em 1.5em;
+  background: var(--color-primary);
+  color: var(--color-white);
+  text-transform: capitalize;   
+  border-radius: 5px;
+}
+
+.btn {
+  background: var(--color-primary);
+  width: max-content;
+  display: inline-block;
+  color: var(--color-white);
+  padding: 0.75rem 1.2rem;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn:hover {
+  color: var(--color-black);
+}
+
+/* Media Queries (medium devices) */
+@media screen and (max-width: 1024px) {
+  .container {
+      width: var(--container-width-md);
+  }
+}
+
+/* Media Queries (Small devices) */
+@media screen and (max-width: 600px) {
+  .container {
+      width: var(--container-width-sm);
+  }
+}
