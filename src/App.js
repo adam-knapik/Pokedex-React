@@ -1,99 +1,97 @@
 import React, { useEffect, useState } from 'react';
-import { getPokemonDescription, getPokemonList, getPokemonImageUrl } from './api/PokeUtilis';
+import axios from 'axios';
 
 function App() {
-  const limitPokemons = 120;
+  const baseURL = "https://pokeapi.co/api/v2/pokemon";
+    const pokemonsLimit = 120;
   
-  const [pokemonList, setPokemonList] = useState([{}]);
-  const [currentPokemonId, setCurrentPokemonId] = useState(1);
-  const [selectedOption, setSelectedOption] = useState(1);
-  const [cardDescription, setCardDescription] = useState('');
-  const [imgContent, setImgContent] = useState('');
-  
-  useEffect(() => {
-    const getPokemonsSelect = async() => {
-      const data = await getPokemonList(limitPokemons);
-      setPokemonList(data);
-    } 
-    getPokemonsSelect();
+    const [pokemonList, setPokemonList] = useState([{}]);
+    const [pokemon, setPokemon] = useState('1');
+    const [selectedOption, setSelectedOption] = useState('');
+    const [pokemonData, setPokemonData] = useState([{}]);
+    const [pokemonType, setPokemonType] = useState('');
+    
+    useEffect(() => {
+        getPokemonList();
+        getPokemon(pokemon);
+        setSelectedOption(pokemonData.id);
+    }, []);
 
-    const getPokemonContent = async() => {
-      const data = await getPokemonDescription(1);
-      setCardDescription(data);
+    const getPokemonList = () => {
+        axios.get(`${baseURL}/?offset=0&limit=${pokemonsLimit}`).then((res) => {
+            setPokemonList(res.data.results);
+        }); 
+    };
+
+    const getPokemon = (pokemonName) => {
+        axios.get(`${baseURL}/${pokemonName}`).then((res) => {
+            setPokemonType(res.data.types[0].type.name);
+            setPokemonData(res.data);
+        })
+    };
+
+    const handleChange = (e) => {
+        setChange(e.target.value);
     }
-    getPokemonContent();
 
-    const getPokemonImage = async() => {
-      const data = await getPokemonImageUrl(1);
-      setImgContent(data);
+    function getPokemonImageUrl(pokemonId) {
+        //console.log(pokemonId);
+        return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
+    };
+
+    const prevPokemon = () => {
+        let prevPokemon = pokemonData.id - 1;
+        if(prevPokemon > 0) { 
+            setChange(prevPokemon);
+        }
+    };
+
+    const nextPokemon = () => {
+        let nextPokemon = parseInt(pokemonData.id) + 1;
+        if(nextPokemon <= pokemonsLimit) {
+            setChange(nextPokemon);
+
+        }
+    };
+
+    const setChange = (newPokemon) => {
+        setPokemon(newPokemon);
+        getPokemon(newPokemon);
+        setSelectedOption(newPokemon);
     }
-    getPokemonImage();
-  }, []);
 
-  const setCardDescriptionById = async(pokemonId) => {
-    const pokemon = await getPokemonDescription(pokemonId);
-    setCardDescription(pokemon);
-  } ;
-
-  const setChange = (pokemonId) => {
-    setCurrentPokemonId(pokemonId);
-    setSelectedOption(pokemonId);
-    setCardDescriptionById(pokemonId);
-    setImgContent(async() => {
-      setImgContent(await getPokemonImageUrl(pokemonId))
-    });
-  };
-
-  const handleChange = (event) => {
-    const pokemonId = event.target.value;
-    setChange(pokemonId);
-  };
-
-  const prevPokemon = (event) => {
-    const prevPokemon = (currentPokemonId - 1);
-    if(prevPokemon > 0) {
-      setChange(prevPokemon);
-    }
-  };
-
-  const nextPokemon = (event) => {
-    const nextPokemon = (parseInt(currentPokemonId) + 1);
-    if(nextPokemon <= limitPokemons) {
-      setChange(nextPokemon);
-    }
-  };
-
-  return (
+    return (
     <div className='container'>
-      <section>
         <div className='select'>
-          <select onChange={handleChange} value={selectedOption}>
+            <select onChange={handleChange} value={selectedOption}>
             {
-              pokemonList.map((pokemon, index) => {
-                return (
-                  <option key={index} value={index+1}>
-                    {pokemon.name}
-                  </option>
-                )
-              })
+                pokemonList.map((poke, index) => {
+                    return (
+                        <option key={index} value={index+1}>
+                            {poke.name}
+                        </option> 
+                    )
+                })
             }
-          </select>
+            </select>  
         </div>
-        <div className='card'>
-          <div className='card-img'>
-            <img src={imgContent}/>
-          </div>
-          <div className='card-description'>
-            {cardDescription}
-          </div>
-        </div>
+
+        <div className='hero'>
+            <img async src={getPokemonImageUrl(pokemon)} alt='Pokemon Image'/>
+            <h2>{pokemonData.name} #{pokemonData.id}</h2>
+                    <ul>
+                        <li>Type: {pokemonType}</li>
+                        <li>Height: {pokemonData.height}</li>
+                        <li>Weight: {pokemonData.weight}</li>
+                    </ul>
+        </div>    
+
         <div className='pagination'>
-          <button className='btn' onClick={prevPokemon}>Previous</button>
-          <button className='btn' onClick={nextPokemon}>Next</button>
-        </div>
-      </section>
+            <button className='btn' onClick={prevPokemon}>Previous</button>
+          <button className='btn' onClick={nextPokemon}>Next</button>  
+        </div>    
     </div>
-  );
+    )
 }
 
 export default App;

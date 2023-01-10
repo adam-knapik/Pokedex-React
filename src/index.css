@@ -45,6 +45,7 @@ body {
   width: var(--container-width-lg);
   margin: 0 auto;
   padding: 2em;
+  gap: 2em;
 }
 
 section {
@@ -55,14 +56,6 @@ section {
   gap: 2em;
 }
 
-.card {
-  width: 80%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  font-size: 1.1em;
-}
 
 .pagination {
   display: flex;
