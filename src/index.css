@@ -28,7 +28,19 @@ html {
 }
 
 ::-webkit-scrollbar {
-  display: none;
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
 }
 
 body {
@@ -48,21 +60,7 @@ body {
   gap: 2em;
 }
 
-section {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  align-items: center;
-  gap: 2em;
-}
-
-
-.pagination {
-  display: flex;
-  gap: 1.5em;
-}
-
-select {
+.picker__select {
   font-size: 1.4em;
   padding: 0.3em 1.5em;
   background: var(--color-primary);
@@ -71,7 +69,44 @@ select {
   border-radius: 5px;
 }
 
-.btn {
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card__title {
+  text-transform: capitalize;
+}
+
+.card__image {
+  max-width: 90%;
+  height: auto;
+}
+
+.card__stats  {
+  line-height: 250%;
+  text-align: left;
+}
+
+.card__type li {
+  margin-left: 2em;
+  list-style: square;
+}
+
+.card__type li svg {
+  margin-left: 0.2em;
+}
+
+.pagination {
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  bottom: 5vh;
+  gap: 1.5em;
+}
+
+.pagination__btn {
   background: var(--color-primary);
   width: max-content;
   display: inline-block;
@@ -82,7 +117,7 @@ select {
   transition: var(--transition);
 }
 
-.btn:hover {
+.pagination__btn:hover {
   color: var(--color-black);
 }
 

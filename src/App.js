@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import PokemonTypesIcons from './data/PokemonTypesIcons';
+import Picker from './components/Picker/Picker';
+import Card from './components/Card/Card';
+import Pagination from './components/Pagination/Pagination';
 
 function App() {
   const baseURL = "https://pokeapi.co/api/v2/pokemon";
-    const pokemonsLimit = 120;
+    const pokemonsLimit = 904; //904
   
-    const [pokemonList, setPokemonList] = useState([{}]);
+    const [pokemonList, setPokemonList] = useState([]);
     const [pokemon, setPokemon] = useState('1');
     const [selectedOption, setSelectedOption] = useState('');
-    const [pokemonData, setPokemonData] = useState([{}]);
+    const [pokemonData, setPokemonData] = useState([])
     const [pokemonType, setPokemonType] = useState('');
     
     useEffect(() => {
@@ -25,8 +29,16 @@ function App() {
 
     const getPokemon = (pokemonName) => {
         axios.get(`${baseURL}/${pokemonName}`).then((res) => {
-            setPokemonType(res.data.types[0].type.name);
             setPokemonData(res.data);
+            setPokemonType( 
+                res.data.types.map((type, index) => {
+                    return (
+                        <li key={index}>
+                            {type.type.name} {PokemonTypesIcons[type.type.name]}  
+                        </li>
+                    )
+                })
+            )
         })
     };
 
@@ -35,7 +47,6 @@ function App() {
     }
 
     function getPokemonImageUrl(pokemonId) {
-        //console.log(pokemonId);
         return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
     };
 
@@ -50,7 +61,6 @@ function App() {
         let nextPokemon = parseInt(pokemonData.id) + 1;
         if(nextPokemon <= pokemonsLimit) {
             setChange(nextPokemon);
-
         }
     };
 
@@ -58,38 +68,37 @@ function App() {
         setPokemon(newPokemon);
         getPokemon(newPokemon);
         setSelectedOption(newPokemon);
-    }
+    };
 
     return (
     <div className='container'>
-        <div className='select'>
-            <select onChange={handleChange} value={selectedOption}>
-            {
+        <Picker 
+            onChange = {handleChange}
+            value = {selectedOption}
+            option = {
                 pokemonList.map((poke, index) => {
                     return (
                         <option key={index} value={index+1}>
-                            {poke.name}
+                            #{index+1} - {poke.name}
                         </option> 
                     )
-                })
+                }) 
             }
-            </select>  
-        </div>
+        />
 
-        <div className='hero'>
-            <img async src={getPokemonImageUrl(pokemon)} alt='Pokemon Image'/>
-            <h2>{pokemonData.name} #{pokemonData.id}</h2>
-                    <ul>
-                        <li>Type: {pokemonType}</li>
-                        <li>Height: {pokemonData.height}</li>
-                        <li>Weight: {pokemonData.weight}</li>
-                    </ul>
-        </div>    
+        <Card 
+            img = {getPokemonImageUrl(pokemon)}
+            title = {pokemonData.name} 
+            id = {pokemonData.id}
+            type = {pokemonType}
+            height = {pokemonData.height}
+            weight = {pokemonData.weight}
+        /> 
 
-        <div className='pagination'>
-            <button className='btn' onClick={prevPokemon}>Previous</button>
-          <button className='btn' onClick={nextPokemon}>Next</button>  
-        </div>    
+        <Pagination 
+            btnPrev= {prevPokemon}
+            btnNext= {nextPokemon}
+        />
     </div>
     )
 }
