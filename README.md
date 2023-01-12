@@ -1,5 +1,5 @@
 ![image_1](./src/assets/featured_pokedex1.png)
-![image_2](./src/assets/featured_pokdex2.png)
+![image_2](./src/assets/featured_pokedex2.png)
 
 # Getting Started with Create React App
 
